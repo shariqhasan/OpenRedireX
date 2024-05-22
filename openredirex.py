@@ -71,6 +71,11 @@ async def load_payloads(payloads_file):
     else:
         return redirect_payloads  # Return hardcoded list if no file specified
 
+async def create_headers(user_agent):
+    headers = {
+        'User-Agent': user_agent
+    }
+    return headers
 
 def fuzzify_url(url: str, keyword: str) -> str:
     # If the keyword is already in the url, return the url as is.
@@ -131,9 +136,10 @@ async def process_urls(semaphore, session, urls, payloads, keyword):
 
 async def main(args):
     payloads = await load_payloads(args.payloads)
+    headers = await create_headers(args.user_agent)
     urls = load_urls()
     tqdm.write(f'[INFO] Processing {len(urls)} URLs with {len(payloads)} payloads.')
-    async with aiohttp.ClientSession() as session:
+    async with aiohttp.ClientSession(headers=headers) as session:
         semaphore = asyncio.Semaphore(args.concurrency)
         await process_urls(semaphore, session, urls, payloads, args.keyword)
 
@@ -152,6 +158,7 @@ if __name__ == "__main__":
     parser.add_argument('-p', '--payloads', help='file of payloads', required=False)
     parser.add_argument('-k', '--keyword', help='keyword in urls to replace with payload (default is FUZZ)', default="FUZZ")
     parser.add_argument('-c', '--concurrency', help='number of concurrent tasks (default is 100)', type=int, default=100)
+    parser.add_argument('-a', '--user-agent', help='customize user-agent', default="ILookRoot-Me")
     args = parser.parse_args()
     try:
         asyncio.run(main(args))
