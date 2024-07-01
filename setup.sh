@@ -3,7 +3,6 @@
 # Rename the openredirex.py file to openredirex
 mv openredirex.py openredirex
 
-
 # Move the openredirex file to /usr/local/bin
 sudo mv openredirex /usr/local/bin/
 

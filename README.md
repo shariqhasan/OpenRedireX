@@ -36,10 +36,19 @@ openredirex [-p payloads] [-k keyword] [-c concurrency]
 - `-p`, `--payloads`: File containing a list of payloads. If not specified, a hardcoded list is used.
 - `-k`, `--keyword`: Keyword in URLs to replace with payload. Default is "FUZZ".
 - `-c`, `--concurrency`: Number of concurrent tasks. Default is 100.
-
+- '-u', '--url': single url to test
+example:  
+```
+python3 openredirex.py -u "https://app.productboard.com/?redirect_to=https://nanoporetech.productboard.com" -p payloads.txt
+```
+- '-Uu', '--urls' comma-separated-urls to test
+example:
+```
+ python3 openredirex.py -Uu "https://app.productboard.com/?redirect_to=https://nanoporetech.productboard.com","https://example.com/?ref=https://ankara.com" -p payloads.txt
+```
 The script expects a list of URLs as input. Each URL should contain the keyword specified by the `-k` option. The script replaces the keyword with each of the payloads, and attempts to fetch the modified URL. 
 
-Example usage:
+Example usage 2:
 
 ```sh
 cat list_of_urls.txt |  openredirex -p payloads.txt -k "FUZZ" -c 50
